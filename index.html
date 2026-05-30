@@ -1312,7 +1312,7 @@ function Completion({ last, setView, repeat, history, updateLastMood }){
       <div className="stats">
         <div className="stat"><div className="n">{last.rounds}</div><div className="k">本次轮数</div></div>
         <div className="stat"><div className="n">{Math.floor(last.seconds/60)}<small style={{fontSize:22, color:"var(--fg-2)"}}>:{String(Math.round(last.seconds%60)).padStart(2,"0")}</small></div><div className="k">时长</div></div>
-        <div className="stat"><div className="n">{totalRounds}<small style={{fontSize:22, color:"var(--fg-2)"}}> / {totalSessions}</small></div><div className="k">累计轮数 / 会话数</div></div>
+
       </div>
       <div className="mood">
         <div className="title">现在的感觉</div>
