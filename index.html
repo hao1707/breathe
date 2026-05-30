@@ -1679,7 +1679,7 @@ function applyAccent(id){
 
 function App(){
   const saved = loadState();
-  const [view, setView] = useState(saved.view || "home");
+  const [view, setView] = useState(saved.view === "complete" ? "home" : (saved.view || "home"));
   const [techId, setTechId] = useState(saved.techId || "478");
   const [tweaks, setTweaks] = useState({ ...TWEAK_DEFAULTS, ...(saved.tweaks||{}) });
   const [session, setSession] = useState(null); // {techId, rounds}
