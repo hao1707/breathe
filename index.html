@@ -1209,16 +1209,6 @@ function Session({ techId, rounds, sound, onFinish, onExit, tweaks }){
       </div>
 
       <div className="orb-wrap">
-        {/* concentric halos */}
-        {[1.3, 1.55, 1.85].map((m,i)=>(
-          <div key={i} className="halo" style={{
-            width:`${56*m}%`, height:`${56*m}%`,
-            transform:`scale(${orbScale})`,
-            opacity: 0.8 - i*0.22,
-            borderColor: i===0 ? "rgba(232,204,179,0.25)" : "rgba(243,236,224,0.07)",
-          }}/>
-        ))}
-
         {/* tick ring (rounds) */}
         <svg className="tick-ring" viewBox="0 0 200 200">
           <circle cx="100" cy="100" r="96" fill="none" stroke="rgba(243,236,224,0.06)" strokeWidth="0.5"/>
@@ -1242,12 +1232,55 @@ function Session({ techId, rounds, sound, onFinish, onExit, tweaks }){
           })}
         </svg>
 
-        {/* core orb */}
-        <div className="orb">
-          <div className="core" style={{
-            transform:`scale(${orbScale})`,
-            boxShadow:`0 0 ${60+orbGlow*80}px ${10+orbGlow*10}px rgba(197,133,96,${0.35+orbGlow*0.2}), inset 0 0 60px rgba(255,220,190,0.2), inset -20px -30px 80px rgba(60,20,5,0.45)`,
-          }}/>
+        {/* Apple Watch breathing flower */}
+        <div className="orb" style={{overflow:'visible'}}>
+          {(()=>{
+            const N = 6;
+            const R = 82;
+            const expand = Math.max(0, (scale - 0.45) / 0.55);
+            const d = 8 + 57 * expand;
+            const rotDeg = expand * 30;
+            const alpha = 0.58 + expand * 0.14;
+            return (
+              <svg viewBox="-160 -160 320 320"
+                style={{position:'absolute',inset:0,width:'100%',height:'100%',overflow:'visible'}}>
+                <defs>
+                  <radialGradient id="pg" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%"   stopColor="var(--clay-soft)" stopOpacity="1"/>
+                    <stop offset="50%"  stopColor="var(--clay)"      stopOpacity="0.80"/>
+                    <stop offset="100%" stopColor="var(--clay-deep)"  stopOpacity="0"/>
+                  </radialGradient>
+                  <filter id="bf" x="-80%" y="-80%" width="260%" height="260%">
+                    <feGaussianBlur stdDeviation="22" result="blur"/>
+                    <feMerge>
+                      <feMergeNode in="blur"/>
+                      <feMergeNode in="SourceGraphic"/>
+                    </feMerge>
+                  </filter>
+                </defs>
+                <g filter="url(#bf)"
+                   style={{
+                     transform:`rotate(${rotDeg}deg)`,
+                     transition:'transform 300ms cubic-bezier(0.4,0,0.2,1)',
+                     transformOrigin:'0 0'
+                   }}>
+                  {Array.from({length:N},(_,i)=>{
+                    const angle = (i/N)*Math.PI*2;
+                    const cx = Math.cos(angle)*d;
+                    const cy = Math.sin(angle)*d;
+                    return (
+                      <g key={i} style={{
+                        transform:`translate(${cx}px,${cy}px)`,
+                        transition:'transform 300ms cubic-bezier(0.4,0,0.2,1)'
+                      }}>
+                        <circle cx={0} cy={0} r={R} fill="url(#pg)" opacity={alpha}/>
+                      </g>
+                    );
+                  })}
+                </g>
+              </svg>
+            );
+          })()}
         </div>
 
         {/* center label */}
